@@ -1,0 +1,2 @@
+Low PT: AUC = 0.6102, Tagging Power = 138.3840
+High PT: AUC = 0.6655, Tagging Power = 19.6830

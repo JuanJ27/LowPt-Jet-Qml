@@ -1,0 +1,8 @@
+numpy
+pennylane
+matplotlib
+ipykernel
+notebook
+uproot
+pandas 
+scikit-learn

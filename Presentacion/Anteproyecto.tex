@@ -1,0 +1,85 @@
+% Anteproyecto.tex
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{lmodern}
+
+\geometry{
+    left=2cm,
+    right=2cm,
+    top=2cm,
+    bottom=2cm
+}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    citecolor=blue,
+    urlcolor=blue
+}
+
+\begin{document}
+
+%=== Portada ===%
+\begin{center}
+    {\Large\bfseries QML para jets en física de altas energías\par}
+    \vspace{0.3cm}
+    {\normalsize Juan Montoya - Computación Cuántica - Universidad de Antioquia\par}
+    \vspace{0.2cm}
+\end{center}
+
+%=== Resumen ===%
+\section{Resumen}
+Este trabajo tiene como objetivo revisar la literatura sobre aprendizaje automático cuántico (QML) aplicado al jet tagging en física de altas energías, con el fin de comprender sus fundamentos teóricos y operativos, comparar su rendimiento frente a técnicas clásicas de clasificación de jets y reproducir los resultados reportados en estudios recientes.
+
+%=== Objetivos ===%
+\section{Objetivos}
+\begin{itemize}
+    \item Entender el rol del QML en jet tagging.
+    \item Explorar la aplicación de QML para clasificación de jets (ej. jets de top vs QCD) usando datos simulados.
+    % \item Implementar un clasificador cuántico variacional con PennyLane y comparar su rendimiento con métodos clásicos.
+    \item Reproducir resultados de papers recientes en HEP.
+    % \item Evaluar la viabilidad práctica del QML en el contexto de análisis de datos reales de colisiones.
+\end{itemize}
+
+%=== Metodología ===%
+\section{Metodología}
+\noindent\textbf{Generación de datos:} Usar MadGraph para simular eventos de colisión y Delphes para detectores. Procesar los datos con ROOT para extraer características relevantes de los jets.
+\\
+\noindent\textbf{Implementación QML:} Desarrollar un clasificador cuántico usando PennyLane, explorando diferentes codificaciones de datos y arquitecturas de circuitos cuánticos.
+\\
+\noindent\textbf{Benchmark:} Comparar el rendimiento del clasificador cuántico contra métodos clásicos.
+\\
+\noindent\textbf{Análisis:} Evaluar ventajas/limitaciones del enfoque cuántico, considerando número de parámetros, tiempo de entrenamiento y precisión.
+
+\section{Referencias}
+\begin{itemize}
+    \item [1] A. Gianelle et al., "Quantum Machine Learning for b-jet charge identification", 
+    
+    \href{https://arxiv.org/pdf/2202.13943}{arXiv:2202.13943}.
+    
+    \item [2] H. Elhag et al., "Quantum Convolutional Neural Networks for Jet Images Classification", \href{https://arxiv.org/pdf/2408.08701}{arXiv:2408.08701}.
+    \item [3] A. Bal et al., "1 Particle - 1 Qubit: Particle Physics Data Encoding for Quantum Machine Learning", \href{https://arxiv.org/pdf/2502.17301}{arXiv:2502.17301}.
+    \item [4] S. Yen-Chi et al., "Hybrid Quantum-Classical Graph Convolutional Network", 
+    
+    \href{https://arxiv.org/pdf/2101.06189}{arXiv:2101.06189}.
+\end{itemize}
+
+% %=== Cronograma ===%
+% \section{Cronograma}
+% \begin{tabular}{@{} l c @{}} \toprule
+% Actividad                  & Tiempo \\ \midrule
+% Revisión literatura QML-HEP & Semana 1 \\
+% Generación datos con MadGraph/Delphes & Semana 1-2 \\
+% Implementación clasificador cuántico & Semana 2 \\
+% Comparación con métodos clásicos & Semana 2 \\
+% Análisis resultados y reporte & Semana 2 \\ \bottomrule
+% \end{tabular}
+
+\end{document}
