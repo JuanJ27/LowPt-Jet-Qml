@@ -1,14 +1,29 @@
-\documentclass{beamer}
+\documentclass[aspectratio=169]{beamer}
 \usetheme{Boadilla}
 \usecolortheme{seahorse}
 \setbeamercolor{palette primary}{bg=blue!15,fg=blue!80!black}
 \usepackage[utf8]{inputenc}
 \usepackage{graphicx}
+\usepackage{physics}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
-\title{QML (Angle Embedding) y DNN para b-Tagging en Jets de bajo momento}
-\author{Juan}
-\institute{Instituto de Física}
-\date{12 de agosto de 2025}
+% Configuración mejorada para bloques y elementos visuales
+\setbeamertemplate{blocks}[rounded][shadow=true]
+\setbeamerfont{block title}{size=\normalsize}
+\setbeamercovered{transparent}
+\setbeamertemplate{navigation symbols}{}
+
+\title[QML para b-Tagging]{QML con Angle Embedding y DNN\\para b-Tagging en Jets de bajo momento}
+\subtitle{Comparación de técnicas cuánticas y clásicas en el régimen de bajo \texorpdfstring{$p_T$}{pT}}
+\author[J. Montoya]{Juan Montoya}
+\institute[Instituto de Física]{
+  Instituto de Física\\
+  Universidad de Antioquia
+}
+\date{2 de octubre de 2025}
 
 \begin{document}
 
@@ -16,190 +31,462 @@
   \titlepage
 \end{frame}
 
-\begin{frame}{Agenda}
+\begin{frame}{Estructura de la presentación}
+  % \begin{block}{Objetivos}
+  %   \begin{itemize}
+  %     \item Explorar QML para b-tagging en régimen de bajo $p_T$ ($<20$ GeV)
+  %     \item Comparar rendimiento de Angle Embedding vs DNN clásica
+  %     \item Analizar limitaciones y potencial futuro
+  %   \end{itemize}
+  % \end{block}
+  %\vspace{0.5em}
   \tableofcontents
 \end{frame}
 
 \section{Introducción}
-\begin{frame}{Contexto y Objetivo}
-  \begin{itemize}
-    \item Que son los jets?
-    % vamos a mostrar dos imagenes horizontalmente
-    \begin{figure}
-      \centering
-      \includegraphics[width=0.45\textwidth]{jet1.png}
-      \hfill
-      \includegraphics[width=0.45\textwidth]{jet2.png}
-    \end{figure}
-  \end{itemize}
+\begin{frame}{¿Qué son los Jets?}
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \begin{block}{Definición}
+        \begin{itemize}
+          \item Chorros colimados de partículas
+          \item Producidos en hadronización
+        \end{itemize}
+      \end{block}
+      \begin{alertblock}{Desafío del b-tagging}
+        \begin{itemize}
+          \item Identificar jets de quarks b
+          \item Crucial para top, Higgs, BSM
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \begin{figure}
+        \includegraphics[width=0.9\textwidth]{jet1.png}
+        \caption{Estructura típica de un jet}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-\begin{frame}{Contexto y Objetivo}
-  \begin{itemize}
-    \item Jets de bajo momento (LowPt) en colisiones pp.
-    % vamos a mostrar tres imagenes dos verticalmente y una horzontal
-    \begin{figure}
-      \centering
-      \includegraphics[width=0.4\textwidth]{njetl.png}
-      \hfill
-      \includegraphics[width=0.4\textwidth]{njeth.png}
-      \hfill
-      \includegraphics[width=0.4\textwidth]{lowpt.png}
-    \end{figure}
-  \end{itemize}
+\begin{frame}{El reto del bajo momento}
+  \begin{columns}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Régimen de bajo \texorpdfstring{$p_T$}{pT} ($<20$ GeV)}
+        \begin{itemize}
+          \item Alta densidad de partículas
+          \item Baja resolución de trazas
+        \end{itemize}
+      \end{block}
+      \vspace{-0.3em}
+      \begin{figure}
+        \includegraphics[width=0.75\textwidth]{njetl.png}
+        \caption{\small Distribución de jets de bajo \texorpdfstring{$p_T$}{pT}}
+      \end{figure}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Importancia}
+        \begin{itemize}
+          \item Acceso a nueva física
+          \item Nuevas metodologías
+        \end{itemize}
+      \end{block}
+      \vspace{-0.3em}
+      \begin{figure}
+        \includegraphics[width=0.75\textwidth]{njeth.png}
+        \caption{\small Comparación con alto \texorpdfstring{$p_T$}{pT}}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-\begin{frame}{Contexto y Objetivo}
-  \begin{itemize}
-    \item Motivante
-    \begin{figure}
-      \centering
-      \includegraphics[width=0.45\textwidth]{motiv.png}
-    \end{figure}
-  \end{itemize}
-\end{frame}
-
-\begin{frame}
-    \begin{figure}
+\begin{frame}{Comparativa visual: alto vs bajo \texorpdfstring{$p_T$}{pT}}
+  \vspace{-0.5em}
+  \begin{block}{Diferencias}
+    \begin{itemize}
+      \item Estrucutra interna
+      \item Calidad de reconstrucción
+    \end{itemize}
+  \end{block}
+  
+  \vspace{-0.5em}
+  \begin{figure}
     \centering
-    \includegraphics[width=0.47\textwidth]{lowptjet.png}
-    \includegraphics[width=0.47\textwidth]{higptjet.png}
+    \begin{minipage}{0.49\textwidth}
+      \centering
+      \includegraphics[width=0.75\textwidth]{lowptjet.png}
+    \end{minipage}
+    \hfill
+    \begin{minipage}{0.49\textwidth}
+      \centering
+      \includegraphics[width=0.75\textwidth]{higptjet.png}
+    \end{minipage}
+    \caption{\footnotesize Izquierda: Jet de bajo \texorpdfstring{$p_T$}{pT} ($<20$ GeV). 
+    Derecha: Jet de alto \texorpdfstring{$p_T$}{pT} ($>20$ GeV)}
   \end{figure}
+\end{frame}
+
+\begin{frame}{Motivación para QML}
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+      \begin{alertblock}{¿Por qué QML?}
+        \begin{itemize}
+          \item Potencial para correlaciones complejas
+          \item Exploración eficiente de espacios de alta dimensión
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{motiv.png}
+        \caption{Ventaja potencial de QML}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \section{Quantum Machine Learning}
-\begin{frame}{¿Qué es QML?}
-  \begin{itemize}
-    \item Híbrido cuántico–clásico
-    \item Se aprovecha superposición y entrelazamiento.
-    \item Embedding de datos clásicos en qubits.
-  \end{itemize}
+\begin{frame}{Fundamentos de QML}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{block}{Características Clave}
+        \begin{itemize}
+          \item Computación híbrida cuántico-clásica
+          \item Circuitos variacionales parametrizados
+          \item Optimización clásica de parámetros
+        \end{itemize}
+      \end{block}
+      \begin{alertblock}{Ventajas Potenciales}
+        \begin{itemize}
+          \item Superposición cuántica
+          \item Entrelazamiento de estados
+          \item Procesamiento paralelo intrínseco
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{angleemb.png}
+        \caption{Esquema QML}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-\begin{frame}{Angle Embedding}
-  \begin{itemize}
-    \item Para un vector $\mathbf{x}=[x_1,\dots,x_n]$ normalizado en $[-\pi,\pi]$.
-    \item Aplica rotaciones $RX(x_i)$ o $RY(x_i)$ en cada qubit.
-    \item n caracteristicas → n qubits.
-  \end{itemize}
-  \vspace{1em}
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.6\textwidth]{angleemb.png}
-  \end{figure}
+\begin{frame}{Angle Embedding: Concepto}
+  \begin{columns}
+    \begin{column}{0.4\textwidth}
+      \begin{block}{Fundamentos}
+        Para un vector de características $\mathbf{x}=[x_1,\dots,x_n]$:
+        \begin{itemize}
+          \item Normalización en $[-\pi,\pi]$
+          \item Un qubit por característica
+          \item Rotaciones $RX(x_i)$ o $RY(x_i)$
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.6\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{blochh.png}
+        \caption{Representación en esfera de Bloch}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-% una nueva diapositva unicamente para mostrar en pantalla completa una imagen
-\begin{frame}{Angle Embedding}
-  \begin{figure}
-    \includegraphics[width=1\textwidth]{blochh.png}
-  \end{figure}
+\begin{frame}{Aplicación al b-tagging}
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \begin{block}{16 Características del Jet}
+        \begin{itemize}
+          \item Variables cinemáticas (\texorpdfstring{$p_T$}{pT}, \texorpdfstring{$\eta$}{eta}, \texorpdfstring{$\phi$}{phi})
+          \item Multiplicidad de partículas
+        \end{itemize}
+      \end{block}
+      \begin{alertblock}{Codificación Cuántica}
+        \[ |\psi\rangle = \bigotimes_{i=1}^{16} R_Y(x_i)|0\rangle \]
+        donde $x_i$ son las características normalizadas
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{angleemb.png}
+        \caption{\small Circuito cuántico con Angle Embedding}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 
-\section{Circuito QML}
-\begin{frame}{Detalles del Circuito}
-  \begin{itemize}
-    \item Dispositivo: \texttt{lightning.gpu}
-    \item Embedding: \texttt{qml.AngleEmbedding(inputs, wires=0..15)}
-    \item Capas: \texttt{qml.StronglyEntanglingLayers(weights, wires=0..15)}
-    \item Salida: $\langle Z_0\rangle \in [-1,1]$
-  \end{itemize}
-  \vspace{1em}
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.4\textwidth]{circuito.png}
-  \end{figure}
+\section{Arquitectura del circuito}
+\begin{frame}{Diseño del Circuito QML}
+  \begin{columns}
+    \begin{column}{0.55\textwidth}
+      \begin{block}{Componentes Principales}
+        \begin{itemize}
+          \item \texttt{device}: \alert{lightning.gpu} (simulador)
+          \item 16 qubits para características del jet
+          \item 4 capas de entrelazamiento
+          \item Medición del observable $\langle Z_0\rangle$
+        \end{itemize}
+      \end{block}
+      \begin{alertblock}{Implementación}
+        \begin{itemize}
+          \item Framework: PennyLane + PyTorch
+          \item Optimizador: Adam ($lr=0.02$)
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.45\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{circuito.png}
+        \caption{Estructura del circuito}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
+\begin{frame}{Capas de entrelazamiento fuerte}
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+      \begin{block}{Estructura por capa}
+        \begin{enumerate}
+          \item \textbf{Rotaciones locales}
+            \begin{itemize}
+              \item $RX(\theta)$, $RY(\phi)$, $RZ(\lambda)$
+              \item Parámetros entrenables
+            \end{itemize}
+          \item \textbf{Entrelazamiento}
+            \begin{itemize}
+              \item Puertas CNOT y CZ
+            \end{itemize}
+        \end{enumerate}
+      \end{block}
+    \end{column}
+    \begin{column}{0.4\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{circuito.png}
+        \caption{Estructura del circuito}
+      \end{figure}
+    \end{column}
+  \end{columns}
+\end{frame}
 
-\begin{frame}{StronglyEntanglingLayers: Correlaciones Cuánticas}
-  \textbf{Cada capa contiene:}
-  \begin{enumerate}
-    \item \textbf{Rotaciones locales:} $RX(\theta)$, $RY(\phi)$, $RZ(\lambda)$ 
-    \begin{itemize}
-      \item Parámetros entrenables
-      \item Orientan cada qubit individualmente
-    \end{itemize}
-    
-    \item \textbf{Puertas entrelazantes:} CNOT, CZ
-    \begin{itemize}
-      \item Conectan qubits → correlaciones no-clásicas
-      \item Estado global $\neq$ suma de estados individuales
-    \end{itemize}
-  \end{enumerate}
-
+\begin{frame}{Correlaciones cuánticas en el circuito}
+  \begin{columns}
+    \begin{column}{0.6\textwidth}
+      \vspace{-0.2em}
+      \begin{alertblock}{Observables de medición}
+        \[ \langle Z_0 \rangle = \bra{\psi} Z_0 \ket{\psi} \in [-1,1] \]
+        \begin{itemize}
+          \item $+1$: b-jet
+          \item $-1$: anti-b-jet
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.38\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{circuito.png}
+        \caption{Estructura del circuito}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \section{Metodología}
-\begin{frame}{Flujo de Trabajo}
-  \begin{enumerate}
-    \item Carga y preprocesamiento de histogramas ROOT
-    \item Normalización (arctan)
-    \item \textbf{QML}: 16 qubits, \texttt{AngleEmbedding}, 4 capas de \texttt{StronglyEntanglingLayers}, medida \texttt{PauliZ}
-    \item \textbf{DNN}: arquitectura 16-64-32-1 con ReLU/tanh
-    \item Entrenamiento (Adam, 10 epochs, batch=64)
-    \item Evaluación: AUC y Tagging Power
-  \end{enumerate}
+\begin{frame}{Flujo de trabajo}
+  \begin{columns}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Preprocesamiento}
+        \begin{enumerate}
+          \item Carga de histogramas ROOT
+          \item Normalización con arctan
+          \item Selección de 16 características
+        \end{enumerate}
+      \end{block}
+      \vspace{-0.2em}
+      \begin{block}{Modelos}
+        \begin{itemize}
+          \item \textbf{QML}: 16 qubits, 4 capas SEL
+          \item \textbf{DNN}: 16-64-32-1, ReLU/tanh
+        \end{itemize}
+      \end{block}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{alertblock}{Entrenamiento}
+        \begin{itemize}
+          \item Optimizador: Adam
+          \item Learning rate: 0.02
+          \item Épocas: 10
+        \end{itemize}
+      \end{alertblock}
+      \vspace{-0.2em}
+      \begin{block}{Evaluación}
+        \begin{itemize}
+          \item AUC-ROC
+          \item Tagging Power
+          \item Análisis por \texorpdfstring{$p_T$}{pT}
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \section{Resultados}
-\begin{frame}{Métricas Comparativas}
-  \begin{itemize}
-    \item AUC y Tagging Power para cada dataset:
-      \begin{itemize}
-        \item Zbb\_LowPT, Zbb\_HighPT, Zp\_M30\_LowPT, Zp\_M100\_LowPT
-      \end{itemize}
-    \item Gráficas de:
-      \begin{itemize}
-        \item Distribución de predicciones
-        \item Evolución de pérdida y accuracy
-      \end{itemize}
-  \end{itemize}
-  \vspace{1em}
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.75\textwidth]{resumen_hmmm/auc_all_datasets.png}
-  \end{figure}
+\begin{frame}{Comparación de rendimiento}
+  \begin{columns}
+    \begin{column}{0.46\textwidth}
+      \begin{block}{Datasets analizados}
+        \begin{itemize}
+          \item Zbb\_LowPT (\texorpdfstring{$p_T < 20$}{pT < 20} GeV)
+          \item Zbb\_HighPT (\texorpdfstring{$p_T \geq 20$}{pT >= 20} GeV)
+          \item Zp\_M30\_LowPT
+          \item Zp\_M100\_LowPT
+        \end{itemize}
+      \end{block}
+      \vspace{-0.2em}
+      \begin{alertblock}{Métricas clave}
+        \begin{itemize}
+          \item AUC: QML vs DNN
+          \item Tagging Power (\texorpdfstring{$\epsilon_{\text{tag}}$}{epsilon})
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{resumen_hmmm/auc_all_datasets.png}
+        \caption{\small Comparativa AUC}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-\begin{frame}
-  \includegraphics[width=1\textwidth]{resumen_hmmm/auc_low_vs_high_pt.png}
+\begin{frame}{Análisis por régimen de \texorpdfstring{$p_T$}{pT}}
+  \begin{columns}
+    \begin{column}{0.45\textwidth}
+      \begin{alertblock}{Observaciones}
+        \begin{itemize}
+          \item DNN superior en alto \texorpdfstring{$p_T$}{pT}
+          \item Brecha menor en bajo \texorpdfstring{$p_T$}{pT}
+          \item Potencial para mejora en QML
+          \item Consideracion del tamaño muestral
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.53\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{resumen_hmmm/auc_low_vs_high_pt.png}
+        \caption{\footnotesize Rendimiento en función del \texorpdfstring{$p_T$}{pT}}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-\begin{frame}
-  \includegraphics[width=1\textwidth]{resumen_hmmm/tagging_power_all_datasets.png}
+\begin{frame}{Tagging power}
+  \begin{columns}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{\texorpdfstring{$\epsilon_{\text{tag}} = \epsilon_{\text{eff}}(2a-1)^2$}{Tagging power Formula}}
+        \begin{itemize}
+          \item \texorpdfstring{$\epsilon_{\text{eff}}$}{epsilon\_eff}: eficiencia de tagging
+        \end{itemize}
+      \end{block}
+      \vspace{-0.2em}
+      \begin{alertblock}{Resultados}
+        \begin{itemize}
+          \item Z': desafío para ambos
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \begin{figure}
+        \includegraphics[width=\textwidth]{resumen_hmmm/tagging_power_all_datasets.png}
+        \caption{\small Tagging Power por dataset}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \section{Conclusiones}
 
-\begin{frame}{Principales Conclusiones: Rendimiento}
-  \begin{itemize}
-    \item DNN vs QML: DNN mejor AUC (0.63 vs 0.52) y tagging en HighPT ($\epsilon \approx$0.12); QML casi no etiqueta.
-    \item HighPT $<$ LowPT: DNN AUC~0.9 vs AUC~0.5; LowPt difícil de separar.
-    \item Z normal $<$ Z': las muestras con masas teóricas distorsionan la distribución y reducen la discriminación.
-  \end{itemize}
+\begin{frame}{Hallazgos principales}
+  \begin{columns}
+    \begin{column}{0.43\textwidth}
+      \begin{block}{Observaciones}
+        \begin{itemize}
+          \item Mayor variabilidad en bajo \texorpdfstring{$p_T$}{pT}
+          \item Potencial para mejora
+        \end{itemize}
+      \end{block}
+      \vspace{-0.3em}
+      \begin{alertblock}{Desafíos}
+        \begin{itemize}
+          \item Muestra limitada (1000 eventos)
+          \item El regimen de baja energia del Z'
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.55\textwidth}
+      \vspace{-0.3em}
+      \begin{figure}
+        \includegraphics[width=0.85\textwidth]{resumen_hmmm/auc_low_vs_high_pt.png}
+        \caption{\footnotesize Resumen de rendimiento}
+      \end{figure}
+    \end{column}
+  \end{columns}
 \end{frame}
 
-\begin{frame}{Principales Conclusiones: Limitaciones y Siguientes Pasos}
-  \begin{itemize}
-    \item Muestra pequeña (1000 eventos)
-    \item Explorar configuraciones distintas del cicuito.
-    \item Explorar otras caracteristicas relevantes del jet.
-  \end{itemize}
+\begin{frame}{Perspectivas futuras}
+  \begin{columns}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Mejoras técnicas}
+        \begin{itemize}
+          \item Arquitecturas más profundas
+          \item Embeddings alternativos
+          \item Optimización de hiperparámetros
+        \end{itemize}
+      \end{block}
+      \vspace{-0.2em}
+      \begin{alertblock}{Nuevas direcciones}
+        \begin{itemize}
+          \item Variables específicas para QML
+          \item Análisis de correlaciones cuánticas
+          \item Hardware
+        \end{itemize}
+      \end{alertblock}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \begin{block}{Impacto potencial}
+        \begin{itemize}
+          \item Mejor discriminación en bajo \texorpdfstring{$p_T$}{pT}
+          \item Acceso a nueva física
+        \end{itemize}
+      \end{block}
+    \end{column}
+  \end{columns}
 \end{frame}
 
 \section{Referencias}
 
-\begin{frame}
-  \begin{thebibliography}{9}
-    \bibitem{Exposicion}
-      A. Gianelle et al., "First implementation of Quantum Machine Learning for b-jet tagging at LHCb", 2021. \href{https://indico.cern.ch/event/1053287/contributions/4442055/attachments/2332563/3975381/qml@lhcb_zuliani.pdf}{Link}
-    \bibitem{angle_embedding}
-      A. Gianelle et al., "Quantum Machine Learning for b-jet charge identification", 2022. \href{https://arxiv.org/pdf/2202.13943}{Link}
-    \bibitem{Representacion en esfera de blochh}
-      Youtube chanel 'Blochh Sphere', "Quantum Neural Networks explained", 2024.
-    \end{thebibliography} \href{https://youtu.be/xL383DseSpE}{Video}
+\begin{frame}{Referencias y recursos}
+  \begin{block}{Artículos principales}
+    \begin{thebibliography}{3}
+      \bibitem{Exposicion}
+        A. Gianelle et al., "First implementation of QML for b-jet tagging at LHCb", 2021.
+        \href{https://indico.cern.ch/event/1053287/contributions/4442055/attachments/2332563/3975381/qml@lhcb_zuliani.pdf}{\beamerbutton{Presentación}}
+      
+      \bibitem{angle_embedding}
+        A. Gianelle et al., "QML for b-jet charge identification", 2022.
+        \href{https://arxiv.org/pdf/2202.13943}{\beamerbutton{Artículo}}
+      
+      \bibitem{Representacion}
+        "Quantum Neural Networks explained", 2024.
+        \href{https://youtu.be/xL383DseSpE}{\beamerbutton{Video Tutorial}}
+    \end{thebibliography}
+  \end{block}
+  
+  \begin{alertblock}{Código}
+    Repositorio disponible en GitHub: \url{github.com/JuanJ27/LowPt-Jet-Qml}
+  \end{alertblock}
 \end{frame}
 
 \end{document}
