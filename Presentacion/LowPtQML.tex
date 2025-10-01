@@ -56,7 +56,7 @@
       \begin{alertblock}{Desafío del b-tagging}
         \begin{itemize}
           \item Identificar jets de quarks b
-          \item Crucial para top, Higgs, BSM
+          \item Problemas con jets de \texorpdfstring{$p_T$}{pT} menor a 20GeV
         \end{itemize}
       \end{alertblock}
     \end{column}
@@ -270,6 +270,40 @@
       \end{figure}
     \end{column}
   \end{columns}
+\end{frame}
+
+\begin{frame}{¿Dónde está el Aprendizaje?}
+  \begin{columns}
+    \begin{column}{0.49\textwidth}
+      \begin{block}{Angle Embedding (Fijo )}
+        \begin{itemize}
+          \item Codifica las 16 features del jet
+          \item Misma transformación para todos los jets
+          \item Solo depende de los datos de entrada
+        \end{itemize}
+        $$|\psi\rangle = \bigotimes_i R_Y(\theta_i^{\text{jet}})|0\rangle$$
+      \end{block}
+    \end{column}
+    
+    \begin{column}{0.49\textwidth}
+      \begin{alertblock}{Capas Variacionales (Entrenable )}
+        \textbf{192 parámetros optimizados}
+        \begin{itemize}
+          \item 4 capas de rotaciones $R(\alpha, \beta, \gamma)$
+          \item 16 qubits $\times$ 3 ángulos = 48 parámetros/capa
+        \end{itemize}
+        $$U(\vec{w}) = \prod_{l=1}^{4} \left[\prod_i R_i^l(\vec{w}_i^l) \cdot \text{CNOT}\right]$$
+      \end{alertblock}
+    \end{column}
+  \end{columns}
+  
+  \vspace{1em}
+  \begin{center}
+    \Large
+    $\hat{y} = \langle 0 | U^\dagger(\vec{w}) \cdot \sigma_z \cdot U(\vec{w}) | \psi_{\text{data}} \rangle$
+    
+    \textcolor{red}{$\uparrow$ Aquí se optimiza $\vec{w}$ para minimizar el error}
+  \end{center}
 \end{frame}
 
 \begin{frame}{Correlaciones cuánticas en el circuito}
