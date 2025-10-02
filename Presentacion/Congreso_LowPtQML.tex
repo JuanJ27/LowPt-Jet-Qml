@@ -21,7 +21,7 @@
 \definecolor{azuloscuro}{RGB}{54,80,255}       % rgba(54, 80, 255, 1)
 \definecolor{azulclaro}{RGB}{112,114,225}    % rgba(112, 114, 255, 1)
 \definecolor{grisclaro}{RGB}{237,237,237}   % rgba(237, 237, 237, 1)
-\definecolor{naranjaacento}{RGB}{255,119,119}  % rgba(255, 119, 119, 1)
+\definecolor{naranjaacento}{RGB}{134,78,255}  % rgba(134, 78, 255, 1)
 
 % Configuración de colores
 \setbeamercolor{structure}{fg=azuloscuro}
@@ -267,14 +267,14 @@
 \begin{frame}{Fundamentos de QML}
   \begin{columns}
     \begin{column}{0.5\textwidth}
-      \begin{block}{Características Clave}
+      \begin{block}{Características clave}
         \begin{itemize}
           \item Computación híbrida cuántico-clásica
           \item Circuitos variacionales parametrizados
           \item Optimización clásica de parámetros
         \end{itemize}
       \end{block}
-      \begin{alertblock}{Ventajas Potenciales}
+      \begin{alertblock}{Ventajas potenciales}
         \begin{itemize}
           \item Superposición cuántica
           \item Entrelazamiento de estados
@@ -322,7 +322,7 @@
           \item Multiplicidad de partículas
         \end{itemize}
       \end{block}
-      \begin{alertblock}{Codificación Cuántica}
+      \begin{alertblock}{Codificación cuántica}
         \[ |\psi\rangle = \bigotimes_{i=1}^{16} R_Y(x_i)|0\rangle \]
         donde $x_i$ son las características normalizadas
       \end{alertblock}
@@ -342,10 +342,10 @@
 \section{Arquitectura del Circuito}
 
 % ----- Diapositiva: Diseño del Circuito QML -----
-\begin{frame}{Diseño del Circuito QML}
+\begin{frame}{Diseño del circuito}
   \begin{columns}
     \begin{column}{0.55\textwidth}
-      \begin{block}{Componentes Principales}
+      \begin{block}{Componentes principales}
         \begin{itemize}
           \item \texttt{device}: \alert{lightning.gpu} (simulador)
           \item 16 qubits para características del jet
@@ -410,8 +410,8 @@
     \end{column}
     
     \begin{column}{0.49\textwidth}
-      \begin{alertblock}{Capas Variacionales (Entrenable )}
-        \textbf{192 parámetros optimizados}
+      \begin{alertblock}{Capas (Entrenable )}
+
         \begin{itemize}
           \item 4 capas de rotaciones $R(\alpha, \beta, \gamma)$
           \item 16 qubits $\times$ 3 ángulos = 48 parámetros/capa
@@ -648,6 +648,7 @@
 
 % ----- Diapositiva: Referencias y Recursos -----
 \begin{frame}{Referencias y recursos}
+  \vspace{-1.3em}
   \begin{block}{Artículos principales}
     \begin{thebibliography}{3}
       \bibitem{Exposicion}
@@ -665,7 +666,20 @@
   \end{block}
   
   \begin{alertblock}{Código}
-    Repositorio disponible en GitHub: \url{github.com/JuanJ27/LowPt-Jet-Qml}
+    \vspace{-1em}
+    \begin{columns}
+      \begin{column}{0.65\textwidth}
+        \begin{itemize}
+          \item Repo GitHub: \href{https://github.com/JuanJ27/LowPt-Jet-Qml/tree/main}{github.com/JuanJ27/LowPt-Jet-Qml}
+        \end{itemize}
+      \end{column}
+      \begin{column}{0.35\textwidth}
+        \begin{figure}
+          \centering
+          \includegraphics[width=0.65\textwidth]{qrcode_github.com.png}
+        \end{figure}
+      \end{column}
+    \end{columns}
   \end{alertblock}
 \end{frame}
 
