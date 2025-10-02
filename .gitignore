@@ -3,6 +3,7 @@ __pycache__/
 *.py[codz]
 *$py.class
 .vscode/
+*.txt
 
 # C extensions
 *.so
@@ -218,3 +219,18 @@ src/*.zip
 *.out
 *.snm
 *.toc
+
+# imgenes
+*.png
+*.jpg
+*.jpeg
+*.svg
+
+# oficce
+*.docx
+*.xlsx
+*.pptx
+
+# cosas
+*.rels
+*.xml
